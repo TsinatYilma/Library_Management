@@ -8,9 +8,13 @@ import Books from "./pages/books";
 
 function App() {
   return (
-    <div>
-      <h1 className="text-9 text-red-600">what the hell</h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} /> {/* path="/" */}
+        <Route path="/pages/books" element={<Books />} />
+        {/* path="/books" */}
+      </Route>
+    </Routes>
   );
 }
 
