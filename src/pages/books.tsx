@@ -12,9 +12,78 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import libraryIcon from "../assets/library-icon.png";
 
+export type Book = {
+  id: number; // unique identifier (could be UUID or DB id)
+  title: string; // book title
+  author: string; // author name
+  isbn: string; // ISBN code
+  category: string;
+  status: string; // category/genre
+};
+const books = [
+  {
+    id: 1,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    isbn: "978-0743273565",
+    status: "Available",
+    category: "Fiction",
+  },
+  {
+    id: 2,
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    isbn: "978-0446310789",
+    status: "Issued",
+    category: "Fiction",
+  },
+  {
+    id: 3,
+    title: "1984",
+    author: "George Orwell",
+    isbn: "978-0451524935",
+    status: "Available",
+    category: "Dystopian",
+  },
+  {
+    id: 4,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    isbn: "978-0141439518",
+    status: "Available",
+    category: "Romance",
+  },
+  {
+    id: 5,
+    title: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    isbn: "978-0316769488",
+    status: "Issued",
+    category: "Fiction",
+  },
+  {
+    id: 6,
+    title: "Lord of the Flies",
+    author: "William Golding",
+    isbn: "978-0399501487",
+    status: "Available",
+    category: "Fiction",
+  },
+];
+
 const Books = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [bookstate, setBooks] = useState<Book[]>([...books]);
+  const [newBook, setNewBook] = useState({
+    id: bookstate.length + 1,
+    title: "",
+    author: "",
+    isbn: "",
+    category: "",
+    status: "Available",
+  });
 
   const navLinks = [
     { label: "Dashboard", href: "/" },
@@ -23,66 +92,41 @@ const Books = () => {
     { label: "Settings", href: "/settings" },
   ];
 
-  const books = [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      isbn: "978-0743273565",
-      status: "Available",
-      category: "Fiction",
-    },
-    {
-      id: 2,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      isbn: "978-0446310789",
-      status: "Issued",
-      category: "Fiction",
-    },
-    {
-      id: 3,
-      title: "1984",
-      author: "George Orwell",
-      isbn: "978-0451524935",
-      status: "Available",
-      category: "Dystopian",
-    },
-    {
-      id: 4,
-      title: "Pride and Prejudice",
-      author: "Jane Austen",
-      isbn: "978-0141439518",
-      status: "Available",
-      category: "Romance",
-    },
-    {
-      id: 5,
-      title: "The Catcher in the Rye",
-      author: "J.D. Salinger",
-      isbn: "978-0316769488",
-      status: "Issued",
-      category: "Fiction",
-    },
-    {
-      id: 6,
-      title: "Lord of the Flies",
-      author: "William Golding",
-      isbn: "978-0399501487",
-      status: "Available",
-      category: "Fiction",
-    },
-  ];
-
-  const filteredBooks = books.filter(
+  const filteredBooks = bookstate.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const handleAddBookForm = () => {
+    console.log("the handler is fine");
+    setAddDialogOpen(!addDialogOpen);
+    setNewBook({
+      id: bookstate.length + 1,
+      title: "",
+      author: "",
+      isbn: "",
+      category: "",
+      status: "Available",
+    });
+    console.log(addDialogOpen);
+  };
+  function handleAddBook() {
+    setBooks([...bookstate, newBook]);
+    setNewBook({
+      id: bookstate.length + 1,
+      title: "",
+      author: "",
+      isbn: "",
+      category: "",
+      status: "Available",
+    }); // reset form setAddDialogOpen(false); // close modal }
+  }
+  function DeleteBook(id: number) {
+    setBooks(bookstate.filter((book) => book.id !== id));
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
-
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto">
@@ -112,11 +156,137 @@ const Books = () => {
               className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
             />
           </div>
-          <button className="inline-flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+          <button
+            className="inline-flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+            onClick={handleAddBookForm}
+          >
             <Plus className="h-5 w-5" />
             Add Book
           </button>
         </div>
+        {addDialogOpen && (
+          <div className="fixed inset-0 z-100 flex items-center justify-center">
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setAddDialogOpen(false)}
+            />
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-slate-800">
+                  Add New Book
+                </h2>
+                <button
+                  onClick={() => setAddDialogOpen(false)}
+                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                >
+                  <X className="h-5 w-5 text-slate-500" />
+                </button>
+              </div>
+
+              {/* FORM START */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault(); // prevent page reload
+                  handleAddBook(); // call your add function
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-slate-700 mb-1"
+                  >
+                    Title
+                  </label>
+                  <input
+                    id="title"
+                    type="text"
+                    placeholder="Enter book title"
+                    value={newBook.title}
+                    onChange={(e) =>
+                      setNewBook({ ...newBook, title: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 text-gray-700 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="author"
+                    className="block text-sm font-medium text-slate-700 mb-1"
+                  >
+                    Author
+                  </label>
+                  <input
+                    id="author"
+                    type="text"
+                    placeholder="Enter author name"
+                    value={newBook.author}
+                    onChange={(e) =>
+                      setNewBook({ ...newBook, author: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 text-gray-700 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="isbn"
+                    className="block text-sm font-medium text-slate-700 mb-1"
+                  >
+                    ISBN
+                  </label>
+                  <input
+                    id="isbn"
+                    type="text"
+                    placeholder="Enter ISBN"
+                    value={newBook.isbn}
+                    onChange={(e) =>
+                      setNewBook({ ...newBook, isbn: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 text-gray-700 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="category"
+                    className="block text-sm font-medium text-slate-700 mb-1"
+                  >
+                    Category
+                  </label>
+                  <input
+                    id="category"
+                    type="text"
+                    placeholder="Enter category"
+                    value={newBook.category}
+                    onChange={(e) =>
+                      setNewBook({ ...newBook, category: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 text-gray-700 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setAddDialogOpen(false)}
+                    className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition-colors"
+                  >
+                    Add Book
+                  </button>
+                </div>
+              </form>
+              {/* FORM END */}
+            </div>
+          </div>
+        )}
 
         {/* Books Table */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -147,7 +317,7 @@ const Books = () => {
                     <td className="px-6 py-4 font-medium text-slate-800">
                       {book.title}
                     </td>
-                    <td className="px-6 py-4 text-slate-600">{book.author}</td>
+                    <td className="px-6 py-4 text-slate-600">{book.id}</td>
                     <td className="px-6 py-4 text-slate-500 hidden md:table-cell">
                       {book.isbn}
                     </td>
@@ -170,7 +340,10 @@ const Books = () => {
                         <button className="p-2 hover:bg-indigo-100 rounded-lg text-indigo-600 transition-colors">
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button className="p-2 hover:bg-red-100 rounded-lg text-red-600 transition-colors">
+                        <button
+                          className="p-2 hover:bg-red-100 rounded-lg text-red-600 transition-colors"
+                          onClick={() => DeleteBook(book.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
