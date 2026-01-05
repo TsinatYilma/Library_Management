@@ -6,6 +6,7 @@ import "./index.css";
 import Home from "./pages/home";
 import Books from "./pages/books";
 import Members from "./pages/members.tsx";
+import Settings from "./pages/setting.tsx";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route index element={<Home />} /> {/* path="/" */}
         <Route path="/books" element={<Books />} />
         <Route path="/members" element={<Members />} />
+        <Route path="/settings" element={<Settings />} />
         {/* path="/books" */}
       </Route>
     </Routes>
