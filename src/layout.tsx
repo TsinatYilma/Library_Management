@@ -1,35 +1,94 @@
-import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Outlet, Link, useLocation } from "react-router-dom";
+import libraryIcon from "./assets/library-icon.png";
+import {
+  BookOpen,
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 
 function Layout() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const navLinks = [
+    { label: "Dashboard", href: "/" },
+    { label: "Books", href: "/books" },
+    { label: "Members", href: "/members" },
+    { label: "Settings", href: "/settings" },
+  ];
   return (
     <div className="min-h-full min-w-full border border-red-500">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-slate-800 shadow-lg">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-          <div className="flex items-center gap-3 text-white font-semibold text-lg">
-            <img
-              src="src\assets\library-icon.png"
-              className="h-10 w-10 rounded-lg"
-            />
-            <span>Library MS</span>
-          </div>
+      <nav className="bg-slate-800 sticky top-0 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <img
+                src={libraryIcon}
+                alt="Library Icon"
+                className="h-10 w-10 rounded-lg"
+              />
+              <span className="text-white font-display text-xl font-semibold">
+                Library MS
+              </span>
+            </div>
 
-          <div className="flex items-center gap-2">
-            {["Dashboard", "Books", "Members", "Settings"].map((item) => (
-              <Link
-                key={item}
-                to={item == "Dashboard" ? `/` : `/${item.toLowerCase()}`}
-                className="rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-amber-400 transition"
-              >
-                {item}
-              </Link>
-            ))}
-            <button className="ml-2 text-sm text-red-400 hover:text-red-300">
-              Log out
+            <div className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    link.href === location.pathname
+                      ? "text-amber-400 bg-slate-700/50"
+                      : "text-slate-300 hover:text-amber-400 hover:bg-slate-700/50"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <button className="ml-4 flex items-center gap-2 text-slate-300 hover:text-red-400 hover:bg-slate-700/50 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+                <LogOut className="h-4 w-4" />
+                Log out
+              </button>
+            </div>
+
+            <button
+              className="md:hidden text-white p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-slate-800 border-t border-slate-700 px-4 py-4 space-y-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="block text-slate-300 hover:text-amber-400 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <button className="w-full text-left flex items-center gap-2 text-slate-300 hover:text-red-400 px-4 py-2 rounded-lg text-sm font-medium">
+              <LogOut className="h-4 w-4" />
+              Log out
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* This is where child pages will render */}

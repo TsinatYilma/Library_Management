@@ -1,184 +1,189 @@
+import {
+  BookOpen,
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import libraryIcon from "../assets/library-icon.png";
 
-type Book = {
-  title: string;
-  author: string;
-  genre: string;
-  availability: string;
-};
+const Books = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-export default function Books() {
-  const [showForm, setShowForm] = useState(false);
+  const navLinks = [
+    { label: "Dashboard", href: "/" },
+    { label: "Books", href: "/books" },
+    { label: "Members", href: "/members" },
+    { label: "Settings", href: "/settings" },
+  ];
 
-  const [books, setBooks] = useState<Book[]>([
+  const books = [
     {
+      id: 1,
       title: "The Great Gatsby",
       author: "F. Scott Fitzgerald",
-      genre: "Classic",
-      availability: "Available",
+      isbn: "978-0743273565",
+      status: "Available",
+      category: "Fiction",
     },
     {
+      id: 2,
       title: "To Kill a Mockingbird",
       author: "Harper Lee",
-      genre: "Fiction",
-      availability: "Checked Out",
+      isbn: "978-0446310789",
+      status: "Issued",
+      category: "Fiction",
     },
     {
+      id: 3,
       title: "1984",
       author: "George Orwell",
-      genre: "Dystopian",
-      availability: "Available",
+      isbn: "978-0451524935",
+      status: "Available",
+      category: "Dystopian",
     },
     {
+      id: 4,
+      title: "Pride and Prejudice",
+      author: "Jane Austen",
+      isbn: "978-0141439518",
+      status: "Available",
+      category: "Romance",
+    },
+    {
+      id: 5,
       title: "The Catcher in the Rye",
       author: "J.D. Salinger",
-      genre: "Classic",
-      availability: "Available",
+      isbn: "978-0316769488",
+      status: "Issued",
+      category: "Fiction",
     },
     {
-      title: "Atomic Habits",
-      author: "James Clear",
-      genre: "Self-Help",
-      availability: "Checked Out",
+      id: 6,
+      title: "Lord of the Flies",
+      author: "William Golding",
+      isbn: "978-0399501487",
+      status: "Available",
+      category: "Fiction",
     },
-    {
-      title: "The Alchemist",
-      author: "Paulo Coelho",
-      genre: "Philosophical",
-      availability: "Available",
-    },
-    {
-      title: "Clean Code",
-      author: "Robert C. Martin",
-      genre: "Programming",
-      availability: "Available",
-    },
-    {
-      title: "The Pragmatic Programmer",
-      author: "Andrew Hunt",
-      genre: "Programming",
-      availability: "Checked Out",
-    },
-    {
-      title: "Sapiens",
-      author: "Yuval Noah Harari",
-      genre: "History",
-      availability: "Available",
-    },
-    {
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      genre: "Finance",
-      availability: "Available",
-    },
-  ]);
+  ];
+
+  const filteredBooks = books.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen mb-10">
-      <div className="intro h-[30vh] border  bg-linear-to-r from-[#242e3d] to-[#323f54] "></div>
-      {/* ================= ADD BOOK BUTTON ================= */}
-      <div className="mx-auto mt-6 text-center  w-full ">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="rounded-lg bg-indigo-500 px-6 py-2 text-white hover:bg-indigo-600 transition"
-        >
-          Add Book
-        </button>
+    <div className="min-h-screen bg-slate-50">
+
+      {/* Header */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-3 mb-4">
+            <BookOpen className="h-10 w-10 text-amber-400" />
+            <h1 className="font-display text-3xl md:text-4xl font-bold">
+              Manage Books
+            </h1>
+          </div>
+          <p className="text-slate-300 text-lg">
+            Browse, add, edit, and manage your library's book collection.
+          </p>
+        </div>
       </div>
 
-      {/* ================= ADD BOOK FORM ================= */}
-      {showForm && (
-        <div className="mx-auto mt-6 max-w-xl rounded-lg bg-black/80 p-6 shadow">
-          <h3 className="mb-4 text-center text-xl font-semibold text-indigo-500">
-            Add New Book
-          </h3>
-
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium">Book Title</label>
-              <input className="mt-1 w-full border-[0.14px] border-gray-500 rounded  px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Author</label>
-              <input className="mt-1 w-full border-[0.14px] border-gray-500 rounded  px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">
-                Publication Year
-              </label>
-              <input
-                type="number"
-                className="mt-1 w-full border-[0.14px] border-gray-500 rounded  px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Publisher</label>
-              <input className="mt-1 w-full border-[0.14px] border-gray-500 rounded  px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none" />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Quantity</label>
-              <input
-                type="number"
-                className="mt-1 w-full border-[0.14px] border-gray-500 rounded  px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none"
-              />
-            </div>
-
-            <button className="w-full rounded bg-emerald-500 py-2 text-white hover:bg-emerald-600 transition">
-              Add Book
-            </button>
-          </form>
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Search and Add */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Search by title or author..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+            />
+          </div>
+          <button className="inline-flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+            <Plus className="h-5 w-5" />
+            Add Book
+          </button>
         </div>
-      )}
 
-      {/* ================= BOOK TABLE ================= */}
-      <div className="mx-auto mt-10   w-full max-w-400 ">
-        <h3 className="mb-4 text-center text-xl font-semibold text-indigo-500">
-          Manage Books
-        </h3>
-
-        <div className="overflow-x-auto rounded-lg bg-black shadow  ">
-          <table className="w-full text-center ">
-            <thead className="bg-slate-700 text-white">
-              <tr>
-                <th className="py-3">#</th>
-                <th>Book Title</th>
-                <th>Author</th>
-                <th>Genre</th>
-                <th>Availability</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y">
-              {books.map((book, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-700 text-center border"
-                >
-                  <td className="py-2">{index + 1}</td>
-                  <td className="">{book.title}</td>
-                  <td>{book.author}</td>
-                  <td>{book.genre}</td>
-                  <td>{book.availability}</td>
-                  <td className="space-x-2">
-                    <button className="rounded bg-indigo-500 px-3 py-1 text-sm text-white hover:bg-indigo-600">
-                      Edit
-                    </button>
-                    <button className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600">
-                      Delete
-                    </button>
-                  </td>
+        {/* Books Table */}
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-700 text-white">
+                  <th className="px-6 py-4 text-left font-semibold">Title</th>
+                  <th className="px-6 py-4 text-left font-semibold">Author</th>
+                  <th className="px-6 py-4 text-left font-semibold hidden md:table-cell">
+                    ISBN
+                  </th>
+                  <th className="px-6 py-4 text-left font-semibold hidden sm:table-cell">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left font-semibold">Status</th>
+                  <th className="px-6 py-4 text-center font-semibold">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredBooks.map((book) => (
+                  <tr
+                    key={book.id}
+                    className="hover:bg-slate-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 font-medium text-slate-800">
+                      {book.title}
+                    </td>
+                    <td className="px-6 py-4 text-slate-600">{book.author}</td>
+                    <td className="px-6 py-4 text-slate-500 hidden md:table-cell">
+                      {book.isbn}
+                    </td>
+                    <td className="px-6 py-4 text-slate-500 hidden sm:table-cell">
+                      {book.category}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold ${
+                          book.status === "Available"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-amber-100 text-amber-700"
+                        }`}
+                      >
+                        {book.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button className="p-2 hover:bg-indigo-100 rounded-lg text-indigo-600 transition-colors">
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button className="p-2 hover:bg-red-100 rounded-lg text-red-600 transition-colors">
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Books;
