@@ -19,7 +19,7 @@ function Layout() {
             {["Dashboard", "Books", "Members", "Settings"].map((item) => (
               <Link
                 key={item}
-                to={`/${item.toLowerCase()}`}
+                to={item == "Dashboard" ? `/` : `/${item.toLowerCase()}`}
                 className="rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-amber-400 transition"
               >
                 {item}
@@ -33,7 +33,7 @@ function Layout() {
       </nav>
 
       {/* This is where child pages will render */}
-      <div className="min-h-full w-full border-2  row  ">
+      <div className="min-h-full w-full border-2">
         <Outlet />
       </div>
       {/* Footer */}

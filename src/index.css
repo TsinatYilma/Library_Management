@@ -15,9 +15,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body{
-  background-color: aqua;
-}
 .logo {
   height: 6em;
   padding: 1.5em;
